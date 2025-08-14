@@ -1,21 +1,19 @@
-import express from "express";
-import router from "./routes";
-import cors from "cors";
+// src/app.ts
+import express, { Express } from 'express';
+import cors from 'cors';
+import router from './routes';
 
-function createApp() {
+export function createApp(): Express {
   const app = express();
-
   app.use(express.json());
-  app.use("/api", router);
 
   const corsOptions = {
     origin: ["http://felipao.sistem.com", "http://gov.br"],
     methods: ["GET", "UPDATE"],
   };
+  app.use(cors(corsOptions));
 
-  app.use(cors());
+  app.use('/api', router);
 
   return app;
 }
-
-export default createApp;
