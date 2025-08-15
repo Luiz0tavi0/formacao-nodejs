@@ -1,6 +1,7 @@
 import { ClubModel } from "./club-model"
 import { PlayerModel } from "./player-model"
 
-type DataModel = ClubModel[] | PlayerModel[]
+type EntityModel = ClubModel | PlayerModel;
+type DataModel = EntityModel[]
 
-export { DataModel };
+export { DataModel, EntityModel };

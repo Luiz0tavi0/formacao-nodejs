@@ -2,11 +2,9 @@ import { beforeEach, beforeAll, describe, it, expect } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../src/app';
 import { db, initDb } from '../src/data/db';
-import { ClubModel } from '../src/models/club-model';
 import type { Express } from 'express';
 import { PlayerModel } from '../src/models/player-model';
-import { randomInt } from 'crypto';
-process.env.NODE_ENV = 'test';
+import { randomEntity } from './utils/random-helper';
 
 let app: Express;
 
@@ -66,13 +64,12 @@ describe('POST /players', () => {
 
 describe('DELETE /players', () => {
     it('deleta um player', async () => {
-        const quantityTotalPlayers = db.data.players.length
-        const randomIdToDelete = randomInt(1, quantityTotalPlayers)
+        const playerToDelete: PlayerModel | undefined = await randomEntity<PlayerModel>(db.data.players)
 
         const res = await request(app)
-            .delete(`${URI_PLAYERS}/${randomIdToDelete}`)
+            .delete(`${URI_PLAYERS}/${playerToDelete?.id}`)
 
-        const playerDeleted: PlayerModel | undefined = db.data.players.find((player: PlayerModel) => player.id === randomIdToDelete)
+        const playerDeleted: PlayerModel | undefined = db.data.players.find((player: PlayerModel) => player.id === playerToDelete?.id)
         console.debug(playerDeleted)
         expect(res.status).toBe(200);
         expect(playerDeleted).toBe(undefined);
@@ -84,12 +81,10 @@ describe('DELETE /players', () => {
 });
 describe('PATCH /players', () => {
     it('atualiza estatisticas de um player', async () => {
-        const quantityTotalPlayers = db.data.players.length
-        const randomId = randomInt(1, quantityTotalPlayers)
+        const playerToUpdate: PlayerModel | undefined = await randomEntity<PlayerModel>(db.data.players)
+
         const newDrible = 8000;
 
-
-        const playerToUpdate: PlayerModel | undefined = db.data.players.find((player: PlayerModel) => player.id === randomId)
         if (playerToUpdate) {
             playerToUpdate.statistics.Dribbling = newDrible;
 
