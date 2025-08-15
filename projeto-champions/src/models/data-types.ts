@@ -3,4 +3,4 @@ import { PlayerModel } from "./player-model"
 
 type DataModel = ClubModel[] | PlayerModel[]
 
-export {DataModel};
+export { DataModel };

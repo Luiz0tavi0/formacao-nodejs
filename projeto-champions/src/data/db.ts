@@ -9,9 +9,10 @@ import { Data, seedDb } from './data-seed/data-seed';
 let db: Low<Data>;
 
 const isTest = process.env.NODE_ENV === 'test';
+
 const filePath = isTest
-    ? join(tmpdir(), `test-db-${randomUUID()}.json`) // banco temporário para testes
-    : join(process.cwd(), 'db.json');               // banco real
+    ? join(tmpdir(), `test-db-${randomUUID()}.json`)
+    : join(process.cwd(), 'db.json');
 
 const adapter = new JSONFile<Data>(filePath);
 db = new Low<Data>(adapter, { players: [], clubs: [] });
@@ -19,6 +20,6 @@ db = new Low<Data>(adapter, { players: [], clubs: [] });
 export { db };
 
 export async function initDb() {
-    await db.read();       // lê o arquivo (ou inicializa vazio)
-    await seedDb(db);      // popula db.data com dados do seed
+    await db.read();
+    await seedDb(db);
 }

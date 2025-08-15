@@ -1,32 +1,27 @@
+import { db } from "../data/db";
 import { PlayerModel } from "../models/player-model";
 import { StatisticsModel } from "../models/statistics-model";
-import { loadData } from "./utils/utils";
 
-let database: PlayerModel[] = [];
-
-(async () => {
-  database = await loadData('src/data/data-seed/seed-players.json');
-})();
 
 export const findAllPlayers = async (): Promise<PlayerModel[]> => {
-  return database;
+  return db.data.players;
 };
 
 export const findPlayerById = async (
   id: number
 ): Promise<PlayerModel | undefined> => {
-  return database.find((player) => player.id === id);
+  return db.data.players.find((player) => player.id === id);
 };
 
 export const insertPlayer = async (player: PlayerModel) => {
-  database.push(player);
+  db.data.players.push(player);
 };
 
 export const deleteOnePlayer = async (id: number) => {
-  const index = database.findIndex((p) => p.id === id);
+  const index = db.data.players.findIndex((p) => p.id === id);
 
   if (index !== -1) {
-    database.splice(index, 1);
+    db.data.players.splice(index, 1);
     return true;
   }
 
@@ -38,11 +33,11 @@ export const findAndModifyPlayer = async (
   statistics: StatisticsModel
 ): Promise<PlayerModel> => {
   //find player
-  const playerIndex = database.findIndex((player) => player.id === id);
+  const playerIndex = db.data.players.findIndex((player) => player.id === id);
 
   if (playerIndex !== -1) {
-    database[playerIndex].statistics = statistics;
+    db.data.players[playerIndex].statistics = statistics;
   }
 
-  return database[playerIndex];
+  return db.data.players[playerIndex];
 };
