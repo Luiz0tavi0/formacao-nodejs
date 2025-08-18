@@ -11,3 +11,20 @@ export const findClubById = async (id: number): Promise<ClubModel | undefined> =
   const club: ClubModel | undefined = await db.data.clubs.find((club: ClubModel) => club.id === id)
   return club ? { ...club } : club;
 }
+
+export const insertClub = async (club: ClubModel) => {
+  await db.data.clubs.push(club);
+};
+
+export const deleteOneClub = async (id: number): Promise<boolean> => {
+  await db.read()
+  const index = db.data.clubs.findIndex((club) => club.id === id);
+
+  if (index !== -1) {
+    db.data.clubs.splice(index, 1);
+    await db.write()
+    return true;
+  }
+
+  return false;
+}

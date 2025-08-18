@@ -18,10 +18,11 @@ export const insertPlayer = async (player: PlayerModel) => {
 };
 
 export const deleteOnePlayer = async (id: number) => {
-  const index = db.data.players.findIndex((p) => p.id === id);
+  const index = db.data.players.findIndex((player) => player.id === id);
 
   if (index !== -1) {
     db.data.players.splice(index, 1);
+    await db.write()
     return true;
   }
 

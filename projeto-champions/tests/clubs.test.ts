@@ -36,3 +36,36 @@ describe('GET /clubs', () => {
         expect(findedClub.id).toBe(idToFind);
     });
 });
+
+describe('POST /clubs', () => {
+    it('cria um novo clube', async () => {
+        const newClub = {
+            id: 99,
+            name: 'Inter de Melão'
+        };
+
+        const res = await request(app)
+            .post(URI_CLUBS)
+            .send(newClub);
+
+        expect(res.status).toBe(201);
+        expect(res.body).toEqual({ message: 'successful' });
+    });
+});
+describe('DELETE /clubs', () => {
+    it('remove um clube a partir do id', async () => {
+        const randomClubToDelete = await randomEntity<ClubModel>(db.data.clubs)
+
+        const res = await request(app)
+            .delete(`${URI_CLUBS}/${randomClubToDelete?.id}`)
+
+        const clubDeleted: ClubModel | undefined = db.data.clubs.find(
+            (club: ClubModel) => club.id === randomClubToDelete?.id
+        )
+
+        expect(res.status).toBe(200);
+        expect(clubDeleted).toBeUndefined();
+        expect(res.body).toEqual({ message: 'deleted' });
+    });
+});
+

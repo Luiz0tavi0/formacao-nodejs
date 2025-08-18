@@ -12,3 +12,19 @@ export const getClubById = async (req: Request<{ id: string }>, res: Response): 
   const response = await service.getClubByIdService(idToFind);
   return res.status(response.statusCode).json(response.body);
 };
+
+export const postClub = async (req: Request, res: Response): Promise<Response> => {
+  const bodyValue = req.body;
+  (bodyValue)
+  const httpResponse = await service.createClubService(bodyValue);
+
+  return res.status(httpResponse.statusCode).json(httpResponse.body);
+};
+
+export const deleteClub = async (req: Request<{ id: string }>, res: Response): Promise<Response> => {
+  const id = parseInt(req.params.id);
+  
+  const httpResponse = await service.deleteClubService(id);
+  
+  return res.status(httpResponse.statusCode).json(httpResponse.body);
+};

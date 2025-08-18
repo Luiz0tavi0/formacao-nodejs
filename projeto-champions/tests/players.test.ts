@@ -63,14 +63,13 @@ describe('POST /players', () => {
 });
 
 describe('DELETE /players', () => {
-    it('deleta um player', async () => {
+    it('deleta um player a partir de seu id', async () => {
         const playerToDelete: PlayerModel | undefined = await randomEntity<PlayerModel>(db.data.players)
 
         const res = await request(app)
             .delete(`${URI_PLAYERS}/${playerToDelete?.id}`)
 
         const playerDeleted: PlayerModel | undefined = db.data.players.find((player: PlayerModel) => player.id === playerToDelete?.id)
-        console.debug(playerDeleted)
         expect(res.status).toBe(200);
         expect(playerDeleted).toBe(undefined);
         expect(res.body).toEqual({ message: 'deleted' });

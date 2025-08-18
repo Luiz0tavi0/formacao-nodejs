@@ -11,6 +11,9 @@ router.patch("/players/:id", PlayerController.updatePlayer);
 router.get("/players/:id", PlayerController.getPlayerById);
 
 router.get("/clubs", ClubsController.getClubs);
+router.post("/clubs", ClubsController.postClub);
+router.delete("/clubs/:id", ClubsController.deleteClub);
 router.get("/clubs/:id", ClubsController.getClubById);
+
 
 export default router;
