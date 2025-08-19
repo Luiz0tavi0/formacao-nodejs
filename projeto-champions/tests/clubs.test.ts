@@ -6,20 +6,15 @@ import { db, initDb } from '../src/data/db';
 import { ClubModel } from '../src/models/club-model';
 import type { Express } from 'express';
 import { randomEntity } from './utils/random-helper';
+import { StatusCode } from '../src/utils/http-helper';
 process.env.NODE_ENV = 'test';
 let app: Express;
 
 const URI_CLUBS = '/api/clubs';
 
+beforeAll(async () => {app = createApp()});
 
-
-beforeAll(async () => {
-    app = createApp();
-});
-
-beforeEach(async () => {
-    await initDb();
-})
+beforeEach(async () => await initDb())
 
 describe('GET /clubs', () => {
     it('retorna os clubes', async () => {
@@ -31,7 +26,7 @@ describe('GET /clubs', () => {
         const randomClub = await randomEntity<ClubModel>(db.data.clubs)
         const idToFind = randomClub?.id
         const res = await request(app).get(`${URI_CLUBS}/${idToFind}`);
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
         const findedClub: ClubModel = res.body;
         expect(findedClub.id).toBe(idToFind);
     });
@@ -48,7 +43,7 @@ describe('POST /clubs', () => {
             .post(URI_CLUBS)
             .send(newClub);
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(StatusCode.created);
         expect(res.body).toEqual({ message: 'successful' });
     });
 });
@@ -63,7 +58,7 @@ describe('DELETE /clubs', () => {
             (club: ClubModel) => club.id === randomClubToDelete?.id
         )
 
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
         expect(clubDeleted).toBeUndefined();
         expect(res.body).toEqual({ message: 'deleted' });
     });
@@ -82,7 +77,7 @@ describe('PATCH /clubs', () => {
         )
 
         expect(clubUpdated?.name).toBe(payload.name);
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
         expect(res.body).toEqual({ message: "success" });
     });
     it('deve falhar ao modificar os atributos de um clube', async () => {
@@ -91,7 +86,7 @@ describe('PATCH /clubs', () => {
             .patch(`${URI_CLUBS}/${randomClubToUpdate?.id}`)
             .send({})
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(StatusCode.badRequest);
         expect(res.body).toBeNull()
     });
 });

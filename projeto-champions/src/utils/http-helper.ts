@@ -1,15 +1,25 @@
 import { HttpResponse } from "../models/http-response-model";
 
+
+export enum StatusCode {
+  ok = 200,
+  created = 201,
+  noContent = 204,
+  badRequest = 400,
+  notFound = 404,
+
+}
+
 export const ok = async (data: any): Promise<HttpResponse> => {
   return {
-    statusCode: 200,
+    statusCode: StatusCode.ok,
     body: data,
   };
 };
 
 export const created = async (): Promise<HttpResponse> => {
   return {
-    statusCode: 201,
+    statusCode: StatusCode.created,
     body: {
       message: "successful",
     },
@@ -18,7 +28,7 @@ export const created = async (): Promise<HttpResponse> => {
 
 export const noContent = async (): Promise<HttpResponse> => {
   return {
-    statusCode: 204,
+    statusCode: StatusCode.noContent,
     body: null,
   };
 };

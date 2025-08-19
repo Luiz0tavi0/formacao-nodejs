@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dist": "tsup src",
-    "start:dev": "tsx --env-file=.env src/server.ts",
-    "start:watch": "tsx watch --env-file=.env src/server.ts",
-    "start:dist": "npm run dist && node dist/server.js",
+    "dist": "NODE_ENV=production tsup src",
+    "start:dev": "NODE_ENV=production tsx --env-file=.env src/server.ts",
+    "start:watch": "NODE_ENV=production tsx watch --env-file=.env src/server.ts",
+    "start:dist": "NODE_ENV=production npm run dist && node dist/server.js",
     "test": "NODE_ENV=test vitest",
     "test:watch": "NODE_ENV=test vitest --watch",
     "test:coverage": "NODE_ENV=test vitest run --coverage"
@@ -17,21 +17,21 @@
   "license": "ISC",
   "devDependencies": {
     "@types/connect": "^3.4.38",
-    "@types/cors": "^2.8.17",
+    "@types/cors": "^2.8.19",
     "@types/estree": "^1.0.8",
-    "@types/express": "^4.17.21",
-    "@types/node": "^24.2.1",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.17.2",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^3.2.4",
     "supertest": "^7.1.4",
-    "tsup": "^8.0.2",
-    "tsx": "^4.7.1",
-    "typescript": "^5.4.3",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.1",
+    "express": "^5.1.0",
     "lowdb": "^7.0.1"
   }
 }

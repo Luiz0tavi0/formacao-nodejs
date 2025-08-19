@@ -10,9 +10,8 @@ let db: Low<Data>;
 
 const isTest = process.env.NODE_ENV === 'test';
 
-const filePath = isTest
-    ? join(tmpdir(), `test-db-${randomUUID()}.json`)
-    : join(process.cwd(), 'db.json');
+// v8 ignore next
+const filePath = isTest ? join(tmpdir(), `test-db-${randomUUID()}.json`) : join(process.cwd(), 'db.json');
 
 const adapter = new JSONFile<Data>(filePath);
 db = new Low<Data>(adapter, { players: [], clubs: [] });

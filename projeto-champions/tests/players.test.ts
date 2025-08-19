@@ -5,36 +5,26 @@ import { db, initDb } from '../src/data/db';
 import type { Express } from 'express';
 import { PlayerModel } from '../src/models/player-model';
 import { randomEntity } from './utils/random-helper';
+import { StatusCode } from '../src/utils/http-helper';
 
 let app: Express;
 
 const URI_PLAYERS = '/api/players';
 
-// router.get("/players", PlayerController.getPlayer); Ok
-// router.get("/players/:id", PlayerController.getPlayerById); ok
-// router.post("/players", PlayerController.postPlayer); ok
-// router.delete("/players/:id", PlayerController.deletePlayer); ok
-// router.patch("/players/:id", PlayerController.updatePlayer); ok
+beforeAll(async () => { app = createApp() });
 
-
-beforeAll(async () => {
-    app = createApp();
-});
-
-beforeEach(async () => {
-    await initDb();
-})
+beforeEach(async () => await initDb())
 
 describe('GET /players', () => {
     it('retorna os players', async () => {
         const res = await request(app).get(URI_PLAYERS);
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
         expect(res.body.length).toBe(19);
     });
     it('retorna o player com id especificado', async () => {
         const idToSearch: number = 2;
         const res = await request(app).get(`${URI_PLAYERS}/${idToSearch}`);
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
 
         const data: PlayerModel = res.body
         const { id, name, position, club } = data
@@ -57,7 +47,7 @@ describe('POST /players', () => {
             .post(URI_PLAYERS)
             .send(newPlayer);
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(StatusCode.created);
         expect(res.body).toEqual({ message: 'successful' });
     });
 });
@@ -70,13 +60,11 @@ describe('DELETE /players', () => {
             .delete(`${URI_PLAYERS}/${playerToDelete?.id}`)
 
         const playerDeleted: PlayerModel | undefined = db.data.players.find((player: PlayerModel) => player.id === playerToDelete?.id)
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(StatusCode.ok);
         expect(playerDeleted).toBe(undefined);
         expect(res.body).toEqual({ message: 'deleted' });
-
-
-
     });
+
 });
 describe('PATCH /players', () => {
     it('deve atualizar estatisticas de um player', async () => {
@@ -89,7 +77,7 @@ describe('PATCH /players', () => {
 
             const res = await request(app)
                 .patch(`${URI_PLAYERS}/${playerToUpdate?.id}`).send(playerToUpdate.statistics)
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(StatusCode.ok);
             expect(res.body.statistics.Dribbling).eq(newDrible);
         }
     });
@@ -106,8 +94,8 @@ describe('PATCH /players', () => {
 
             const res = await request(app)
                 .patch(`${URI_PLAYERS}/${randomPlayerToUpdate.id}`).send(playerToUpdate.statistics)
-            expect(res.status).toBe(400);
-            
+            expect(res.status).toBe(StatusCode.badRequest);
+
             expect(res.body).toBeNull();
         }
     });
