@@ -38,6 +38,7 @@ export const findAndModifyPlayer = async (
 
   if (playerIndex !== -1) {
     db.data.players[playerIndex].statistics = statistics;
+    await db.write()
   }
 
   return db.data.players[playerIndex];

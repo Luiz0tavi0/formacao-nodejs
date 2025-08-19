@@ -29,9 +29,17 @@ export const createClubService = async (club: ClubModel): Promise<HttpResponseMo
 }
 export const deleteClubService = async (id: number): Promise<HttpResponseModel> => {
 
-  let response = null;
   const isDeleted = await repository.deleteOneClub(id)
 
   return isDeleted ? await HttpResponse.ok({ message: "deleted" }) : await HttpResponse.badRequest();
+
+}
+export const updateClubService = async (id: number, data: Partial<ClubModel>): Promise<HttpResponseModel> => {
+
+  const dataClub = await repository.findAndModifyClub(id, data);
+  if (!dataClub)
+    return await HttpResponse.badRequest()
+
+  return await HttpResponse.ok({ message: "success" })
 
 }

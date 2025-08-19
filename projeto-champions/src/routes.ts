@@ -13,6 +13,7 @@ router.get("/players/:id", PlayerController.getPlayerById);
 router.get("/clubs", ClubsController.getClubs);
 router.post("/clubs", ClubsController.postClub);
 router.delete("/clubs/:id", ClubsController.deleteClub);
+router.patch("/clubs/:id", ClubsController.patchClub);
 router.get("/clubs/:id", ClubsController.getClubById);
 
 

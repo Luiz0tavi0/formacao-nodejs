@@ -79,7 +79,7 @@ describe('DELETE /players', () => {
     });
 });
 describe('PATCH /players', () => {
-    it('atualiza estatisticas de um player', async () => {
+    it('deve atualizar estatisticas de um player', async () => {
         const playerToUpdate: PlayerModel | undefined = await randomEntity<PlayerModel>(db.data.players)
 
         const newDrible = 8000;
@@ -90,8 +90,25 @@ describe('PATCH /players', () => {
             const res = await request(app)
                 .patch(`${URI_PLAYERS}/${playerToUpdate?.id}`).send(playerToUpdate.statistics)
             expect(res.status).toBe(200);
-            const data: PlayerModel = res.body
             expect(res.body.statistics.Dribbling).eq(newDrible);
+        }
+    });
+    it('deve falhar ao atualizar estatisticas de um player', async () => {
+        const playerToUpdate: PlayerModel | undefined = await randomEntity<PlayerModel>(db.data.players)
+        const randomPlayerToUpdate = { id: -999 }
+
+        const newDrible = 8000;
+        const newOverall = 564;
+
+        if (playerToUpdate) {
+            playerToUpdate.statistics.Dribbling = newDrible;
+            playerToUpdate.statistics.Overall = newOverall;
+
+            const res = await request(app)
+                .patch(`${URI_PLAYERS}/${randomPlayerToUpdate.id}`).send(playerToUpdate.statistics)
+            expect(res.status).toBe(400);
+            
+            expect(res.body).toBeNull();
         }
     });
 });

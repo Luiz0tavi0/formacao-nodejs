@@ -69,3 +69,30 @@ describe('DELETE /clubs', () => {
     });
 });
 
+describe('PATCH /clubs', () => {
+    it('deve modificar os atributos de um clube', async () => {
+        const randomClubToUpdate = await randomEntity<ClubModel>(db.data.clubs)
+        const payload: Partial<ClubModel> = { name: 'Atletico sem atletas' }
+        const res = await request(app)
+            .patch(`${URI_CLUBS}/${randomClubToUpdate?.id}`)
+            .send(payload)
+
+        const clubUpdated: ClubModel | undefined = db.data.clubs.find(
+            (club: ClubModel) => club.id === randomClubToUpdate?.id
+        )
+
+        expect(clubUpdated?.name).toBe(payload.name);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ message: "success" });
+    });
+    it('deve falhar ao modificar os atributos de um clube', async () => {
+        const randomClubToUpdate = { id: -999 }
+        const res = await request(app)
+            .patch(`${URI_CLUBS}/${randomClubToUpdate?.id}`)
+            .send({})
+
+        expect(res.status).toBe(400);
+        expect(res.body).toBeNull()
+    });
+});
+

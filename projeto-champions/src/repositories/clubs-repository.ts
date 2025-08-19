@@ -28,3 +28,12 @@ export const deleteOneClub = async (id: number): Promise<boolean> => {
 
   return false;
 }
+export const findAndModifyClub = async (id: number, payload: Partial<ClubModel>): Promise<ClubModel | null> => {
+  const clubIndex = db.data.clubs.findIndex((club: ClubModel) => { return club.id === id })
+  let response = null;
+  if (clubIndex !== -1) {
+    response = db.data.clubs[clubIndex] = { ...db.data.clubs[clubIndex], ...payload };
+    await db.write()
+  }
+  return response
+}
