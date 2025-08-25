@@ -14,8 +14,7 @@ const BatButton = ({ config }: BatButtonProps) => {
     const [password, setPassword] = useState('')
 
     const handleGenerateButton = () => {
-        const generateToken: string = generatePassword()
-        console.log(config)
+        const generateToken: string = generatePassword(config)
         setPassword(generateToken)
     }
     const handleCopyButton = () => Clipboard.setStringAsync(password)

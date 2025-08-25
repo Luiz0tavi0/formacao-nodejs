@@ -1,5 +1,5 @@
 import { View, Text, Pressable, TextInput } from 'react-native';
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import styles from './InputNumberStyles';
 
 interface InputNumberProps {
@@ -11,46 +11,33 @@ interface InputNumberProps {
 }
 
 const InputNumber = ({ value, setValue, min, max, step }: InputNumberProps) => {
-    const [inputText, setInputText] = useState(value.toString());
     const inputRef = useRef<TextInput>(null);
 
-    // mantém o input em sincronia quando o valor externo mudar
-    useEffect(() => {
-        setInputText(value.toString());
-    }, [value]);
-
-    const updateValue = (newValue: number) => {
-        const clamped = Math.min(Math.max(newValue, min), max);
-        setValue(clamped);
-    };
-
     const handleIncrement = () => {
-        inputRef.current?.blur(); // força encerrar edição antes
-        if (value < max) updateValue(value + step);
+        inputRef.current?.blur();
+        setValue(Math.min(value + step, max));
     };
 
     const handleDecrement = () => {
-        inputRef.current?.blur(); // força encerrar edição antes
-        if (value > min) updateValue(value - step);
+        inputRef.current?.blur();
+        setValue(Math.max(value - step, min));
     };
 
     const handleTextChange = (text: string) => {
         const cleaned = text.replace(/[^0-9]/g, '');
-        setInputText(cleaned);
-    };
 
-    const validateAndUpdate = () => {
-        if (inputText === '') {
-            updateValue(min);
+        if (cleaned === '') {
+            setValue(min);
             return;
         }
 
-        const num = parseInt(inputText, 10);
-        if (!isNaN(num)) {
-            updateValue(num);
-        } else {
-            setInputText(value.toString());
-        }
+        let num = Number(cleaned);
+
+        // aplica limites
+        if (num < min) num = min;
+        if (num > max) num = max;
+
+        setValue(num);
     };
 
     return (
@@ -62,13 +49,10 @@ const InputNumber = ({ value, setValue, min, max, step }: InputNumberProps) => {
             <TextInput
                 ref={inputRef}
                 keyboardType="numeric"
-                placeholder={min.toString()}
                 textAlign="center"
                 style={styles.inputer}
-                value={inputText}
+                value={value.toString()}
                 onChangeText={handleTextChange}
-                onEndEditing={validateAndUpdate} 
-                onFocus={() => setInputText(value.toString())}
             />
 
             <Pressable onPress={handleIncrement}>

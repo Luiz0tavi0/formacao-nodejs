@@ -1,12 +1,20 @@
+import { Config } from "screens/Home"
 
-const generatePassword = () => {
-
+const generatePassword = (config: Config) => {
     let password: string = ''
-    let characters: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-    const PASSWORD_LENGTH = 8
+    let possibleCharacters: string = ''
+    const { numberOfChararcters, alphabetic, numeric, specialCharacters } = config;
+    
+    if (alphabetic)
+        possibleCharacters += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (numeric)
+        possibleCharacters += '0123456789';
+    if (specialCharacters)
+        possibleCharacters += '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
 
-    while (password.length < PASSWORD_LENGTH) {
-        password += characters.charAt(Math.floor(Math.random() * characters.length))
+
+    while (password.length < numberOfChararcters) {
+        password += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length))
     }
     return password
 }
