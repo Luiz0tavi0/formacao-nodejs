@@ -3,12 +3,9 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        padding: 20,
-        width: '80%',
-        marginVertical: 4,
-        // borderColor: 'red',
-        // borderWidth: 3,
-        justifyContent: 'space-between',
+        marginTop:10,
+        width: '100%',
+        justifyContent: 'space-around',
         marginBottom: 50,
     },
 
